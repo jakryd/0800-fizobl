@@ -1,0 +1,73 @@
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{movie15}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usefonttheme[onlymath]{serif}
+\usepackage{tikz}
+\usetikzlibrary{matrix,calc,chains,positioning,decorations.pathreplacing,arrows}
+
+\usetheme{default}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\hypersetup{colorlinks=true, allcolors=red}
+\addtobeamertemplate{footline}{\hypersetup{allcolors=.}}{}
+\setbeamertemplate{caption}[numbered]
+\DeclareMathSizes{10}{12}{7}{7}
+
+% Bold fonts for math symbols.
+\def\kT{k_\mathrm{B}T}                                % Boltzmann's constant
+\def\d{\mathrm{d}}                                    % derivative
+\def\e{\mathrm{e}}                                    % exponent
+\def\dim{\mathrm{dim}}                                % dimension
+\def\sfP{{\bf P}}                                     % feature distribution
+\def\sfQ{{\bf Q}}                                     % latent distribution
+\def\sfM{{\bf M}}
+\def\bs{{\bf s}}                                      % collective variable
+\def\bx{{\bf x}}                                      % physical observable
+\def\bR{{\bf R}}                                      % microscopic coordinates
+\def\bP{{\bf P}}
+\def\br{{\bf r}}
+\def\bp{{\bf p}}
+\def\bv{{\bf v}}
+\def\kldiv{D_{\mathrm{KL}}\big(\sfM\|\sfQ\big)}       % KL divergence
+
+\newcommand{\fref}[1]{\footnote{\fontsize{6pt}{6}\selectfont #1}}
+\newcommand\frefw[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{\fontsize{6pt}{6}\selectfont #1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+% named colors
+\definecolor{offwhite}{RGB}{249,242,215}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{70,70,70}
+\definecolor{title}{RGB}{107,174,214}
+\definecolor{gray}{RGB}{155,155,155}
+\definecolor{subtitle}{RGB}{0,0,255}
+\definecolor{emph}{RGB}{102,255,204}
+\definecolor{hilight}{RGB}{102,255,204}
+\definecolor{vhilight}{RGB}{255,111,207}
+\definecolor{lolight}{RGB}{155,155,155}
+
+% use those colors
+\setbeamercolor{titlelike}{fg=blue}
+\setbeamercolor{caption name}{fg=black}
+\setbeamercolor{subtitle}{fg=subtitle}
+\setbeamercolor{institute}{fg=black}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{item}{fg=black} % color of bullets
+\setbeamercolor{subitem}{fg=black}
+\setbeamercolor{itemize/enumerate subbody}{fg=black}
+\setbeamertemplate{itemize subitem}{{\textendash}}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
+
+% page number
+\setbeamertemplate{footline}{%
+  \raisebox{5pt}{\makebox[\paperwidth]{%
+    \hfill\makebox[50pt]{\color{gray}
+      \scriptsize\insertframenumber}}}\hspace*{5pt}}
