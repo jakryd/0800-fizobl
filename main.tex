@@ -486,13 +486,13 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
 \setlength\itemsep{1em}
   \item We can derive Eq.~\ref{eq:boltz} by using the maximum entropy princliple. We know that:
   \begin{equation}
-    \int\d\bx\;\rho(\bx) E(\bx) = E_0,
+    \int\d\bx\;\rho(\bx) E(\bx) = U,
   \end{equation}
   and that $\rho$ must be normalized.
 
   \item We introduce the augumented function $J$:
   \begin{align}
-    J &\equiv -\int\d\bx\;\rho(\bx)\log\rho(\bx) \\ &+ \lambda_1 \left(\int\d\bx\;\rho(\bx)E(\bx) - E_0\right) \\ &+ \lambda_0 \left(\int\d\bx\;\rho(\bx) - 1\right),
+    J &\equiv -k_\mathrm{B}\int\d\bx\;\rho(\bx)\log\rho(\bx) \\ &+ \lambda_1 \left(\int\d\bx\;\rho(\bx)E(\bx) - U\right) \\ &+ \lambda_0 \left(\int\d\bx\;\rho(\bx) - 1\right),
   \end{align}
   where $\lambda_0$ and $\lambda_1$ are the Lagrange multipliers.
 \end{itemize}
@@ -503,22 +503,43 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
 \setlength\itemsep{1em}
   \item Taking the functional derivative w.r.t. to $\rho$ and setting it to zero, we have:
   \begin{equation}
-    \frac{\delta J}{\delta \rho} = -\log\rho(\bx) - 1 + \lambda_1 E + \lambda_0 = 0,
+    \frac{\delta J}{\delta \rho} = -k_\mathrm{B} \log\rho(\bx) - k_\mathrm{B} + \lambda_1 E + \lambda_0 = 0,
   \end{equation}
 
   \item which implies that the maximum entropy distribution is:
   \begin{equation}
-    \rho(\bx) = Z^{-1} \lambda_1 \e^{\lambda_1 E(\bx)},
+    \rho(\bx) = \lambda_1 \e^{\frac{-k_\mathrm{B}+\lambda_0+\lambda_1 E(\bx) }{ k_\mathrm{B} }},
   \end{equation}
-  where $Z$ is the canonical partition function, and $Z=\e^{1-\lambda_0}$.
+  which translates to:
+  \begin{equation}
+    \rho(\bx) = Z \e^{\frac{ -k_\mathrm{B}+\lambda_0 }{ k_\mathrm{B} }}
+  \end{equation}
+  where $Z$ is the canonical partition function:
+  \begin{equation}
+    Z=\int\d\bx\; \e^{\frac{\lambda_1}{k_\mathrm{B}} E}.
+  \end{equation}
+\end{itemize}
+\end{frame}
 
+\begin{frame}{Canonical Ensemble}
+\begin{itemize}
+\setlength\itemsep{1em}
   \item We get that the density must have a form:
   \begin{equation}
-    \rho(\bx) = \frac{1}{Z}\e^{\lambda_1 E(\bx)}
+    \rho(\bx) = \frac{1}{Z}\e^{\frac{\lambda_1}{k_\mathrm{B}} E(\bx)}
   \end{equation}
-  and
+  and the entropy is:
   \begin{equation}
-    Z = \int\d\bx\; \e^{\lambda_1 E(\bx)}.
+    S(\bx) = -\lambda_1 U + k_\mathrm{B}\log Z.
+  \end{equation}
+
+  \item We differentiate $S$ w.r.t. $U$ and apply $\d U = T\d S - P\d V$:
+  \begin{equation}
+    \frac{\d S}{\d U} = -\lambda_1 \equiv \frac{1}{T}
+  \end{equation}
+  from which we get that:
+  \begin{equation}
+    \frac{\lambda_1}{k_\mathrm{B}} = -\frac{1}{k_\mathrm{B}T} = -\beta.
   \end{equation}
 \end{itemize}
 \end{frame}
