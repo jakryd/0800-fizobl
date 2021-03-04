@@ -17,15 +17,7 @@
 \begin{minipage}{\dimexpr\linewidth-2\fboxsep}#1\end{minipage}}}
 
 % title info
-\title{%
-%\fbox{%
-%\begin{minipage}{9cm}
-%  \centering
-%  \vspace{0.2cm}
-  Introduction to Computational Physics
-%  \vspace{0.2cm}
-%\end{minipage}}
-}
+\title{Introduction to Computational Physics}
 
 \author{\textbf{Jakub Rydzewski}\\[5pt]
   \footnotesize{\it NCU Institute of Physics}}
@@ -109,46 +101,6 @@
   \item Probability is the language of statistical mechanics.
   \item Fundamental to the understanding of quantum mechanics.
   \item The large number of degrees of freedom of a macroscopic system make it necessary to use statistics.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Probability}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item We use the following notation for probability density:
-  \begin{equation}
-    p(x) \equiv p_x(\xi)
-  \end{equation}
-  as it is often done in physics.
-  \item The probability is given by $\textsf{Prob}(\xi \leq x \leq \xi + \d\xi) = p_x(\xi) \d\xi$.
-  \item $p_x(\xi) \geq 0$ and $\int_{-\infty}^{\infty}\d\xi\; p_x(\xi) = 1$. Therefore:
-  \begin{equation}
-    \textsf{Prob}(a \leq x < b) = \int_a^b \d\xi\; p_x(\xi).
-  \end{equation}
-  \item Average: $\left< f(x) \right> \equiv \int\d x\; f(x)p(x)$.
-  \item Variance: $\textsf{Var}(x) \equiv \left<x^2\right> - \left<x\right>^2$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Probability}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item Multivariate case:
-  \begin{equation}
-    \left< f(\bx) \right> = \int\d\bx\; f(\bx) p(\bx),
-  \end{equation}
-  where $\d\bx \equiv \d x_1 \dots \d x_N$.
-
-  \item Marginal probability density is obtained by integrating over all other degrees of freedom:
-  \begin{equation}
-    p(x_s) = \int\d x_1 \dots \d x_{s-1} \d x_{s+1} \dots \d x_N\; p(\bx).
-  \end{equation}
-
-  \item The following:
-  \begin{equation}
-    p(\bx) = p(x_1) p(x_2) \dots p(x_N)
-  \end{equation}
-  is true if random variables are statistically independent.
 \end{itemize}
 \end{frame}
 
@@ -242,13 +194,37 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
   \item $\int_{-\epsilon}^{\epsilon}\d x\; \delta(x) = 1$ for all $\epsilon > 0$
   \item Gaussian model:
   \begin{equation}
-    \delta(x) = \lim_{\sigma \rightarrow 0} \frac{1}{\sqrt{2\pi\sigma^2}} \e^{-\frac{x^2}{2\sigma^2}}
+    \delta_\sigma(x) = \lim_{\sigma \rightarrow 0} \frac{1}{\sqrt{2\pi\sigma^2}} \e^{-\frac{x^2}{2\sigma^2}}
   \end{equation}
 \end{itemize}
 \begin{figure}
   \includegraphics[width=0.4\textwidth]{fig/dirac-delta.png}
-  \caption{title}
+  \caption{Gaussian model for the Dirac $\delta$ function.}
 \end{figure}
+\end{frame}
+
+\begin{frame}{Dirac $\delta$ function}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item $\delta$ function times any arbitrary function $f(x)$ is:
+  \begin{equation}
+    \int_\infty^\infty \d x\; \delta(x)f(x) = f(0).
+  \end{equation}
+
+  \item Other models for $\delta$ function include Fourier integral:
+  \begin{equation}
+    \delta_\sigma(x) = \frac{1}{2\pi} \int_{-\infty}^\infty \d k\; \e^{ikx-|\sigma|x},
+  \end{equation}
+  and scaled sinc:
+  \begin{equation}
+    \delta_\sigma(x) = \frac{1}{\pi\sigma}\mathrm{sinc}(x/\sigma).
+  \end{equation}
+
+  \item Important for building histograms (notice the change of variables):
+  \begin{equation}
+    \int_{-\infty}^\infty \d x\; \delta(x-a)f(x) = f(a).
+  \end{equation}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Definitions}
@@ -265,10 +241,10 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
 \end{frame}
 
 \begin{frame}{Scales}
-\begin{itemize}
-  \item Spatial:
-  \item Temporal:
-\end{itemize}
+\begin{figure}
+  \includegraphics[width=\textwidth]{fig/scales.jpg}
+  \caption{Spatial and temporal scales.}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Phase Space}
@@ -463,6 +439,7 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
 \setlength\itemsep{1em}
   \item At a given temperature $T$, the probability for a system to be in a certain configuration $\bx$ with energy $E(\bx)$ is:
   \begin{equation}
+  \label{eq:boltz}
     \rho(\bx) = \frac{1}{Z} \e^{-\beta E(\bx)},
   \end{equation}
   where $\beta = \frac{1}{\kT}$ is the \textit{inverse temperature}\fref{$\beta\approx 0.4$ kJ/mol at 300 K.}, and the canonical partition function is:
@@ -474,6 +451,41 @@ We have $\mathbb{E}[\boldsymbol{X}]=\boldsymbol{\mu}$ and $\textsf{Var}[\boldsym
   \begin{equation}
     \left< A \right> = \frac{1}{Z} \int\d\bx\; A(\bx) \e^{-\beta E(\bx)}.
   \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Canonical Ensemble}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item We can derive Eq.~\ref{eq:boltz} by using the maximum entropy princliple. We know that:
+  \begin{equation}
+    \int\d\bx\;\rho(\bx) E(\bx) = E_0,
+  \end{equation}
+  and that $\rho$ must be normalized.
+
+  \item We introduce the augumented function $J$:
+  \begin{align}
+    J &\equiv -\int\d\bx\;\rho(\bx)\log\rho(\bx) \\ &+ \lambda_1 \left(\int\d\bx\;\rho(\bx)E(\bx) - E_0\right) \\ &+ \lambda_0 \left(\int\d\bx\;\rho(\bx) - 1\right),
+  \end{align}
+  where $\lambda_0$ and $\lambda_1$ are the Lagrange multipliers.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Canonical Ensemble}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Taking the functional derivative w.r.t. to $\rho$ and setting it to zero, we have:
+  \begin{equation}
+    \frac{\delta J}{\delta \rho} = -\log\rho(\bx) - 1 + \lambda_1 E + \lambda_0 = 0,
+  \end{equation}
+
+  \item which implies that the maximum entropy distribution is:
+  \begin{equation}
+    \rho(\bx) = Z^{-1} \lambda_1 \e^{\lambda_1 E(\bx)},
+  \end{equation}
+  where $Z$ is the canonical partition function, and $Z=\e^{1-\lambda_0}$.
+
+  \item
 \end{itemize}
 \end{frame}
 
