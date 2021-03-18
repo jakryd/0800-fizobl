@@ -813,6 +813,39 @@ def pi_estimator_markov_chain(n_samples, step=0.1):
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Importance Sampling: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/is_f.png}
+  \caption{Function $f(x)=1/(1+\exp(-x))$.}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Importance Sampling: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/is_dist.png}
+  \caption{Distributions to sample from.}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Importance Sampling: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/is_f_dist.png}
+  \caption{Distributions of evaluated samples.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Importance Sampling: Examples}
+\begin{block}{Results}
+\begin{lstlisting}
+$ python importance-sampling.py --n_samples 100000
+
+f(x) from p(x): mean= 0.9306712389 std= 0.0686291035
+f(x) from q(x): mean= 0.9891990210 std= 0.0132275039
+f(x) from IS:   mean= 0.9261305966 std= 4.5258393804
+\end{lstlisting}
+\end{block}
+\end{frame}
+
 \begin{frame}{M(RT)$^2$}
 \textbf{Markov Chain}\vspace{0.2cm}
 \emphbox{
