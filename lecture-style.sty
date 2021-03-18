@@ -7,6 +7,24 @@
 \usefonttheme[onlymath]{serif}
 \usepackage{tikz}
 \usetikzlibrary{matrix,calc,chains,positioning,decorations.pathreplacing,arrows}
+\usepackage{listings}
+\lstset{language=Python}
+\lstset{basicstyle=\ttfamily}
+
+\usepackage{empheq}
+\usepackage[most]{tcolorbox}
+\usepackage{graphicx}
+\newtcbox{\boxeq}[1][]{%
+    nobeforeafter, math upper,
+    colframe=magenta!30!black,
+    colback=magenta!30, boxrule=0.6pt, sharp corners,
+    #1}
+
+\colorlet{shade}{gray!40}
+\renewcommand\thefootnote{\textcolor{red}{\arabic{footnote}}}
+\newcommand{\emphbox}[1]{%
+\noindent\colorbox{shade}{%
+\begin{minipage}{\dimexpr\linewidth-2\fboxsep}#1\end{minipage}}}
 
 \usetheme{default}
 \beamertemplatenavigationsymbolsempty

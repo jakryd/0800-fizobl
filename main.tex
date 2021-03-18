@@ -1,20 +1,6 @@
 \documentclass[10pt]{beamer}
 
 \usepackage{lecture-style}
-\usepackage{empheq}
-\usepackage[most]{tcolorbox}
-\usepackage{graphicx}
-\newtcbox{\boxeq}[1][]{%
-    nobeforeafter, math upper,
-    colframe=magenta!30!black,
-    colback=magenta!30, boxrule=0.6pt, sharp corners,
-    #1}
-
-\colorlet{shade}{gray!40}
-\renewcommand\thefootnote{\textcolor{red}{\arabic{footnote}}}
-\newcommand{\emphbox}[1]{%
-\noindent\colorbox{shade}{%
-\begin{minipage}{\dimexpr\linewidth-2\fboxsep}#1\end{minipage}}}
 
 % title info
 \title{Introduction to Computational Physics}
@@ -667,6 +653,88 @@ If $\bx_1, \bx_2, \dots, \bx_n$ are $n$ random variables drawn from a population
 
   \item In general, we do not have such simple distribution to sample from in statistical mechanics.
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{block}{Estimator no 1}
+\begin{lstlisting}
+def pi_estimator(n_samples):
+  est = list()
+  n_inside = 0; n_all = 0
+  for i in range(n_samples):
+    x = np.random.uniform(-1.0, 1.0)
+    y = np.random.uniform(-1.0, 1.0)
+    dist = np.sqrt(np.power(x, 2) +
+                   np.power(y, 2))
+    if dist <= 1.0:
+      n_inside += 1
+    n_all += 1
+    est.append(4.0 * np.float(n_inside) /
+               np.float(n_all))
+  return np.array(est)
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/estimator-1.png}
+  \caption{Estimator no 1.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{block}{Estimator no 2}
+\begin{lstlisting}
+def pi_estimator_integral(n_samples):
+  est = list()
+  e = 0.0
+  for i in range(n_samples):
+    x = np.random.uniform(0.0, 1.0)
+    y = 4.0 * np.sqrt(1.0 - np.power(x, 2))
+    e += (y - e) / (np.float(i) + 1.0)
+    est.append(e)
+  return np.array(est)
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/estimator-2.png}
+  \caption{Estimator no 2.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{block}{Estimator no 3}
+\begin{lstlisting}
+def pi_estimator_markov_chain(n_samples, step=0.1):
+  est = list()
+  n_inside = 0; n_all = 0;
+  x = np.random.uniform(-1.0, 1.0)
+  y = np.random.uniform(-1.0, 1.0)
+  for i in range(n_samples):
+    dx = np.random.uniform(-step, step)
+    dy = np.random.uniform(-step, step)
+    xn = x + dx; yn = y + dy
+    if abs(xn) < 1.0 and abs(yn) < 1.0:
+      x = xn; y = yn
+    dist = np.sqrt(np.power(x, 2) + np.power(y, 2))
+    if dist <= 1.0: n_inside += 1
+    n_all += 1
+    est.append(4.0 * np.float(n_inside) /
+               np.float(n_all))
+  return np.array(est)
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Monte Carlo Methods: Examples}
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{code/estimator-3.png}
+  \caption{Estimator no 3.}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Importance Sampling}
