@@ -837,11 +837,11 @@ def pi_estimator_markov_chain(n_samples, step=0.1):
 \begin{frame}[fragile]{Importance Sampling: Examples}
 \begin{block}{Results}
 \begin{lstlisting}
-$ python importance-sampling.py --n_samples 100000
+python importance-sampling.py --n_samples 100000
 
-f(x) from p(x): mean= 0.9306712389 std= 0.0686291035
-f(x) from q(x): mean= 0.9891990210 std= 0.0132275039
-f(x) from IS:   mean= 0.9261305966 std= 4.5258393804
+f(x) from p(x): mean=0.9306712389 std=0.0686291035
+f(x) from q(x): mean=0.9891990210 std=0.0132275039
+f(x) from IS:   mean=0.9261305966 std=4.5258393804
 \end{lstlisting}
 \end{block}
 \end{frame}
@@ -876,6 +876,78 @@ f(x) from IS:   mean= 0.9261305966 std= 4.5258393804
   \end{equation}
   as $f(\br) \propto \e^{-\beta U(\br)}$.
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on Double-Well Potential}
+\begin{lstlisting}
+python mc-double-well.py --n_samples 10000 --temp 5
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/dw-pot.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on Double-Well Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/dw-traj.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on Double-Well Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/dw-hist.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-potential.py --n_samples 10000 --temp 1.0
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-t-1.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-potential.py --n_samples 10000 --temp 2.0
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-t-2.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-potential.py --n_samples 10000 --temp 3.0
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-t-3.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-potential.py --n_samples 10000 --temp 4.0
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-t-4.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-potential.py --n_samples 10000 --temp 5.0
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-t-5.png}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Replica Exchange Monte Carlo}
@@ -953,6 +1025,51 @@ f(x) from IS:   mean= 0.9261305966 std= 4.5258393804
     \Delta_{K,K+1} = (\beta_K - \beta_{K+1}) \left[ U(\br^{(K)}) - U(\br^{(K+1)}) \right]
   \end{equation}
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python mc-pt-potential.py --n_samples 10000
+                          --temp 1,2,3,4,5
+                          --n_replicas 5
+                          --exchange 1000
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-t-1.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-t-2.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-t-3.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-t-4.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-t-5.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/mc-mb-pt-ex.png}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Wang-Landau Sampling}
@@ -1060,12 +1177,81 @@ There are three main ingredients in molecular dynamics (MD):
 \end{itemize}
 \end{frame}
 
-%\begin{frame}{}
-%\begin{itemize}
-%\setlength\itemsep{1em}
-%  \item
-%\end{itemize}
-%\end{frame}
+\begin{frame}{Initial Conditions}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Initial coordinates.
+
+  \item Initial velocities are sampled from a Maxwell-Boltzmann distribution, taking care to ensure that the sampled velocities are consistent with any constraints imposed on the system:
+  \begin{equation}
+    f(v) = \frac{m}{2\pi k_\mathrm{B}T}^{1/2} \e^{-mv^2 / 2 k_\mathrm{B}T},
+  \end{equation}
+  where $v$ is the velocity of a particle of mass $m$ at temperature $T$.
+
+  \item An example of a Gaussian probability distribution.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Potential Energy Model}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Commonly used model of potential energy in MD for biological macromolecules is the following:
+  \begin{align}
+    U(\br)
+      &= \sum_\mathrm{bonds} \frac{1}{2} K_\mathrm{bond} (r-r_0)^2 \\
+      &+ \sum_\mathrm{bends} \frac{1}{2} K_\mathrm{bends} (\theta-\theta_0)^2 \\
+      &+ \sum_\mathrm{tors} \sum_{n=0}^6 A_n [1+\cos(C_n \phi + \delta_n)] \\
+      &+ \sum_{i,j\in \mathrm{non-bonds}} \left( 4\epsilon_{ij} \left[ \frac{\sigma_{ij}}{r_{ij}}^{12} - \frac{\sigma_{ij}}{r_{ij}}^6 \right] + \frac{q_i q_j}{r_{ij}} \right).
+  \end{align}
+
+  \item Force is given by $\boldsymbol{F} = -\partial{U}/\partial{\br}$.
+
+  \item Called \textit{force field} in MD.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
 
 %\begin{frame}{}
 %  \begin{center}
