@@ -104,7 +104,9 @@
 
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item $p_{\boldsymbol{X}}(\bx) \equiv \mathbb{P}[\boldsymbol{X} = \bx]$.\fref{From now on we write $p(\bx)$ to denote $p_{\boldsymbol{X}}(\bx)$.}
+  \item Note that $p_{\boldsymbol{X}}(\bx)\equiv\mathbb{P}[\boldsymbol{X}=\bx]$.
+
+  \item From now on we write $p(\bx)$ to denote $p_{\mathbf{X}}(\bx)$.
 
   \item $p_{\boldsymbol{X}}(\bx)$ is non-negative and satisfies the normalization condition:
   \begin{equation}
@@ -1367,10 +1369,10 @@ python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
   \end{figure}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item Gromacs \url{www}
-  \item NAMD \url{www}
-  \item OpenMM \url{www}
-  \item LAMMPS \url{www}
+  \item Gromacs \url{https://www.gromacs.org/}
+  \item NAMD \url{https://www.ks.uiuc.edu/Research/namd/}
+  \item OpenMM \url{https://openmm.org/}
+  \item LAMMPS \url{https://lammps.sandia.gov/}
 \end{itemize}
 \end{frame}
 
@@ -1381,11 +1383,79 @@ python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
   \end{center}
 \end{frame}
 
-%\begin{frame}{Enhanced Sampling and Free Energy Computation}
-%\begin{itemize}
-%\setlength\itemsep{1em}
-%  \item
-%\end{itemize}
-%\end{frame}
+\begin{frame}{Long Timescales}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Modeling the long-timescale behavior of complex dynamical systems is a fundamental task in physical sciences.
+
+  \item MD simulations allow us to probe the spatiotemporal details of molecular processes, but the so-called sampling problem severely limits their usefulness in practice.
+
+  \item This sampling problem comes from the fact that a typical free energy landscape is characterized by many metastable states separated by free energy barriers that are much higher than the thermal energy $\kT$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sampling Problem}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item On the timescale one can simulate, barrier crossings are rare events, and the system remains kinetically trapped in a single metastable state.
+  \begin{figure}
+    \includegraphics[width=0.6\textwidth]{fig/barrier.png}
+    \caption{Ergodic and infrequent trajectories.}
+  \end{figure}
+
+  \item ES can be used to alleviate the sampling problem.
+
+  \item Here, we focus on ES methods that work by identifying coarse variables and enhancing their fluctuations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Consider a molecular system, described by microscopic coordinates $\mathbf{R}$ and a potential energy function $U(\mathbf{R})$.
+
+  \item We limit our theory to the canonical ensemble (NVT).
+
+  \item At equilibrium, the microscopic coordinates follow the Boltzmann distribution:
+  \begin{equation}
+    P(\mathbf{R}) = \e^{-\beta U(\mathbf{R})}/\int \d\mathbf{R} \,\e^{-\beta U(\mathbf{R})},
+  \end{equation}
+  where $\beta$ is the inverse of the thermal energy.
+
+  \item We identify a small set of coarse-grained order parameters called \textit{collective variables} (CVs):
+  \begin{equation}
+    \mathbf{s}(\mathbf{R}) = [s_1(\mathbf{R}), s_2(\mathbf{R}), \ldots, s_d(\mathbf{R})].
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item The equilibrium marginal distribution of CVs is given by integrating out all other degrees of freedom:
+  \begin{align}
+  \label{eq:ps}
+    P(\mathbf{s}) =
+      \int \d\mathbf{R} \, \delta
+        \left[
+          \mathbf{s} - \mathbf{s}(\mathbf{R})
+        \right]
+      P(\mathbf{R}),
+  \end{align}
+  where we use the sifting property of the Dirac $\delta$-function.
+
+  \item Eq.~\ref{eq:ps} is equivalent to:
+  \begin{equation}
+    P(\bs) = \big< \delta[\mathbf{s}-\mathbf{s(R)}] \big>,
+  \end{equation}
+  where $\left<\cdot\right>$ denotes an ensemble average.
+
+  \item Up to an unimportant constant, the \textit{free energy} surface (FES) is given by:
+  \begin{equation}
+    F(\mathbf{s})= -\beta^{-1} \log P(\mathbf{s}).
+  \end{equation}
+
+\end{itemize}
+\end{frame}
 
 \end{document}
