@@ -1198,80 +1198,194 @@ There are three main ingredients in molecular dynamics (MD):
   \item Commonly used model of potential energy in MD for biological macromolecules is the following:
   \begin{align}
     U(\br)
-      &= \sum_\mathrm{bonds} \frac{1}{2} K_\mathrm{bond} (r-r_0)^2 \\
-      &+ \sum_\mathrm{bends} \frac{1}{2} K_\mathrm{bends} (\theta-\theta_0)^2 \\
-      &+ \sum_\mathrm{tors} \sum_{n=0}^6 A_n [1+\cos(C_n \phi + \delta_n)] \\
-      &+ \sum_{i,j\in \mathrm{non-bonds}} \left( 4\epsilon_{ij} \left[ \frac{\sigma_{ij}}{r_{ij}}^{12} - \frac{\sigma_{ij}}{r_{ij}}^6 \right] + \frac{q_i q_j}{r_{ij}} \right).
+      &= \sum_\mathrm{bond} \frac{1}{2} K_\mathrm{bond} (r-r_0)^2 \\
+      &+ \sum_\mathrm{angle} \frac{1}{2} K_\mathrm{bends} (\theta-\theta_0)^2 \\
+      &+ \sum_\mathrm{dihedral} \sum_{n=0}^6 A_n [1+\cos(C_n \phi + \delta_n)] \\
+      &+ \sum_{i,j\in \mathrm{non-bonded}} \left( 4\epsilon_{ij} \left[ \frac{\sigma_{ij}}{r_{ij}}^{12} - \frac{\sigma_{ij}}{r_{ij}}^6 \right] + \frac{q_i q_j}{r_{ij}} \right).
   \end{align}
 
-  \item Force is given by $\boldsymbol{F} = -\partial{U}/\partial{\br}$.
+  \item Force is given by $\mathbf{F} = -\partial{U}/\partial{\br}$.
 
   \item Called \textit{force field} in MD.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{}
+\begin{frame}{Potential Energy Model}
+\begin{itemize}
+  \item Force field provides constraints into the systems.
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/ff.png}
+    \caption{Force field contributions.}
+  \end{figure}
+
+  \item Many force fields are available: Amber, CHARMM, Gromos.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{General Scheme in MD}
+\begin{figure}
+  \includegraphics[width=0.7\textwidth]{fig/md-scheme.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the Wolfe-Quapp Potential}
+\begin{lstlisting}
+for i in range(0, args.n_samples-1):
+  position[i+1] = position[i]
+                + velocity[i]*dt
+                + 0.5*(force/m)*dt**2
+  p, f = U.eval(position[i+1])
+  velocity[i+1] = velocity[i]
+                + 0.5/m*dt*(force+f)
+  p_energy[i+1] = p
+  force = f
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the Wolfe-Quapp Potential}
+\begin{lstlisting}
+python MD-WolfeQuapp.py --n_samples 10000 --dt 0.01 --mass 1
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/fig/md-wq.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Particle on the M\"uller-Brown Potential}
+\begin{lstlisting}
+python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
+\end{lstlisting}
+\vspace*{-0.3cm}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/fig/md-mb.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/fig/md-mb-trajx.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Particle on the M\"uller-Brown Potential}
+\begin{figure}
+  \includegraphics[width=\textwidth]{code/fig/md-mb-trajy.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Alanine Dipeptide}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item
+  \item Benchmark system for MD methods.
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{fig/alanine.png}
+    \caption{Alanine dipeptide with the dihedral angles.}
+  \end{figure}
+
+  \item Scatter plot of the dihedral angles in called the Ramachandran plot.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Alanine Dipeptide}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item An example of the \texttt{.gro} file with alanine dipeptide.
+\end{itemize}
+\begin{lstlisting}
+     22
+    1ACE   HH31    1   1.075   1.111   1.585
+    1ACE    CH3    2   1.129   1.065   1.502
+    1ACE   HH32    3   1.070   0.991   1.448
+    1ACE   HH33    4   1.215   1.011   1.540
+    1ACE      C    5   1.162   1.167   1.395
+    1ACE      O    6   1.140   1.286   1.416
+    2ALA      N    7   1.230   1.118   1.289
+    2ALA      H    8   1.248   1.019   1.293
+    2ALA     CA    9   1.260   1.194   1.165
+    2ALA     HA   10   1.304   1.125   1.093
+    2ALA     CB   11   1.126   1.224   1.093
+    2ALA    HB1   12   1.078   1.312   1.135
+    2ALA    HB2   13   1.147   1.247   0.989
+    2ALA    HB3   14   1.073   1.129   1.094
+    2ALA      C   15   1.357   1.317   1.171
+    2ALA      O   16   1.392   1.372   1.068
+    3NME      N   17   1.404   1.353   1.294
+    3NME      H   18   1.350   1.322   1.373
+    3NME    CH3   19   1.517   1.445   1.315
+    3NME   HH31   20   1.495   1.544   1.278
+    3NME   HH32   21   1.546   1.457   1.420
+    3NME   HH33   22   1.606   1.405   1.267
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Alanine Dipeptide}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Evolution of alanine dipeptide in vacuum.
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{fig/ala1.png}
+  \end{figure}
+
+  \item Free energy can be calculated if the trajectory diplays ergodicity as:
+  \begin{equation}
+    F(\Phi,\Psi)=-\beta^{-1}\log P(\Phi,\Psi),
+  \end{equation}
+  where $\beta$ is the inverse temperature and $P(\Phi,\Psi)$ is the probability of occurence in a given state described by the dihedral angles.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Alanine Dipeptide}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Difference between the ergodic and non-ergodic trajectories.
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/ala1-time.png}
+    \caption{Time evolution of alanine dipeptide in vacuum.}
+  \end{figure}
+
+  \item In the left, the transitions between two energy basins are \textit{rare} or \textit{infrequent}.
+
+  \item In the right, the trajectory jumps between the states many times.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Proteins in MD}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Proteins, DNA, viruses, membranes can be studied using MD.
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{fig/pes-protein.jpg}
+    \caption{Protein in the phase space.}
+  \end{figure}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{MD Engines}
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{fig/gmx.png}
+  \end{figure}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Gromacs \url{www}
+  \item NAMD \url{www}
+  \item OpenMM \url{www}
+  \item LAMMPS \url{www}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item
-\end{itemize}
+  \begin{center}
+    \fontsize{25pt}{6}\selectfont\vspace{1.2cm}
+    \textcolor{subtitle}{Enhanced Sampling}
+  \end{center}
 \end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-\setlength\itemsep{1em}
-  \item
-\end{itemize}
-\end{frame}
-
-
-%\begin{frame}{}
-%  \begin{center}
-%    \fontsize{25pt}{6}\selectfont\vspace{1.2cm}
-%    \textcolor{subtitle}{Enhanced Sampling}
-%  \end{center}
-%\end{frame}
 
 %\begin{frame}{Enhanced Sampling and Free Energy Computation}
 %\begin{itemize}
 %\setlength\itemsep{1em}
 %  \item
 %\end{itemize}
-%\end{frame}
-
-%\begin{frame}{}
-%  \begin{center}
-%    \fontsize{25pt}{6}\selectfont\vspace{1.2cm}
-%    \textcolor{subtitle}{Machine Learning}
-%  \end{center}
 %\end{frame}
 
 \end{document}
