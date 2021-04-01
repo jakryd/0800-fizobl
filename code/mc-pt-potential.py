@@ -153,5 +153,33 @@ plt.yticks([1, 2, 3, 4, 5])
 plt.xlim([0, args.n_samples])
 plt.show()
 
+#for i in range(args.n_replicas):
+#  particles[i].plot()
+  
+temperatures = np.zeros(shape=(args.n_replicas, args.n_samples, mb_potential.dimension))
 for i in range(args.n_replicas):
-  particles[i].plot()
+	replica = particles[i]
+	for j in range(args.n_samples):
+		ndx = int(replica.temperatures[j] - 1)
+		temperatures[ndx, j] = replica.traj[j]
+
+bins = np.full(mb_potential.dimension, 200, dtype=np.int64)
+hist = np.array([np.linspace(mb_potential.grid_min[i],
+                             mb_potential.grid_max[i],
+                             bins[i]) for i in range(mb_potential.dimension)])
+x_grid, y_grid = np.meshgrid(hist[0], hist[1])
+pot_grid = np.zeros(bins)
+for i in range(bins[0]):
+	for j in range(bins[1]):
+	   pot_grid[i, j] = mb_potential.eval([x_grid[i, j], y_grid[i, j]])
+
+fig, ax = plt.subplots(1, 1, figsize=(8,6))
+ax.set_xlim([mb_potential.grid_min[0], mb_potential.grid_max[0]])
+ax.set_ylim([mb_potential.grid_min[1], mb_potential.grid_max[1]])
+cf = ax.contourf(x_grid, y_grid, pot_grid - pot_grid.min(),
+                     vmin=0.0, vmax=50.0, levels =
+                     np.linspace(0.0, 50, 100), cmap =
+                     'seismic', extend = 'max')
+plt.colorbar(cf)
+plt.scatter(temperatures[0,:,0], temperatures[0,:,1], c='k')
+plt.show()

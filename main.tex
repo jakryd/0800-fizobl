@@ -1419,6 +1419,7 @@ python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
   \item At equilibrium, the microscopic coordinates follow the Boltzmann distribution:
   \begin{equation}
     P(\mathbf{R}) = \e^{-\beta U(\mathbf{R})}/\int \d\mathbf{R} \,\e^{-\beta U(\mathbf{R})},
+  \label{eq:pr}
   \end{equation}
   where $\beta$ is the inverse of the thermal energy.
 
@@ -1454,7 +1455,89 @@ python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
   \begin{equation}
     F(\mathbf{s})= -\beta^{-1} \log P(\mathbf{s}).
   \end{equation}
+\end{itemize}
+\end{frame}
 
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item FES contains all the relevant information about the system, such as the location and relative stability of the metastable states and the free energy barriers separating them.
+
+  \item The relative free energy difference between two metastable states $A$ and $B$ can be determined from $F(\bs)$ by integrating the probabilities of the two states:
+  \begin{equation}
+    \Delta F_{A,B} = -\frac{1}{\beta}\log\frac{\int_A \d\bs\e^{-\beta F(\bs)}}{\int_B \d\bs\e^{-\beta F(\bs)}},
+  \end{equation}
+  where the integrations are performed over the two regions in CV space that define the two metastable states $A$ and $B$, respectively.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item For an ergodic system, the FES can equivalently be computed as:
+  \begin{equation}
+    F(\bs) = -\frac{1}{\beta} \lim_{t\rightarrow\infty} N(\bs, t),
+  \end{equation}
+  where the normalized histogram is given as:
+  \begin{equation}
+    N(\bs,t) = \frac{\int_0^t \d t'\; \delta[\bs-\bs(\bR(t'))]}{\int_0^t \d t'}.
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item CV-based enhanced sampling methods overcome the sampling problem by introducing an external bias potential $V(\bs(\bR))$ acting in CV space.
+
+  \item This leads to sampling according to a \textit{biased} distribution:
+  \begin{equation}
+    P_{V}(\mathbf{R}) = \frac{\e^{-\beta \left[U(\mathbf{R})+V(\mathbf{s}(\mathbf{R})) \right]}}{\int \d\mathbf{R} \,\e^{-\beta \left[U(\mathbf{R})+V(\mathbf{s}(\mathbf{R})) \right]}}
+  \end{equation}
+
+  \item Compare it to Eq.~\ref{eq:pr}.
+
+  \item Idea of Torrie and Valleau, 1977.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item At convergence, CVs follow a biased distribution:
+  \begin{align}
+      P_{V}(\mathbf{s}) &= \int \d\mathbf{R} \, \delta
+    \left[
+      \mathbf{s} - \mathbf{s}(\mathbf{R})
+    \right]
+  P_{V}(\mathbf{R}) \nonumber\\ &=
+  \frac{ \e^{ -\beta\left[ F(\mathbf{s}) + V(\mathbf{s}) \right] } }
+    {\int\d\mathbf{s} \, \e^{ -\beta\left[ F(\mathbf{s}) + V(\mathbf{s}) \right] } },
+  \end{align}
+  which is easier to sample.
+
+  \item The standard reweighting from importance sampling applies here:
+  \begin{equation}
+    P(\bR) \propto P_V(\bR) w(\bs(\bR)) = P_V(\bR) \e^{\beta V(\bs(\bR))}.
+  \end{equation}
+
+  \item CV-based methods differ in how they construct the bias potential and which kind of biased CV sampling they obtain at convergence.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Theory of Enhanced Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item A non-exhaustive list of modern CV-based enhanced sampling techniques includes multiple windows umbrella sampling, adaptive biasing force, Gaussian-mixture umbrella sampling, metadynamics, variationally enhanced sampling, on-the-fly probability-enhanced sampling (OPES), and ATLAS.
+
+  \item But let's start with umbrella sampling, proposed by the seminal work of Torrie and Valleau.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item TODO
 \end{itemize}
 \end{frame}
 
