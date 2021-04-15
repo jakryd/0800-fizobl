@@ -1378,6 +1378,304 @@ python MD-MuellerBrown.py --n_samples 10000 --dt 0.01 --mass 1
 
 \begin{frame}{}
   \begin{center}
+    \vspace{1.2cm}
+    \includegraphics[width=0.8\textwidth]{fig/lammps-logo.png}
+    \frefw{Source: \url{https://lammps.sandia.gov/}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{LAMMPS}
+  \begin{quote}
+    LAMMPS is a classical molecular dynamics (MD) code that models ensembles of particles in a liquid, solid, or gaseous state. It can model atomic, polymeric, biological, solid-state (metals, ceramics, oxides), granular, coarse-grained, or macroscopic systems using a variety of interatomic potentials (force fields) and boundary conditions. It can model 2d or 3d systems with only a few particles up to millions or billions.\fref{Source: LAMMPS Page: \url{https://lammps.sandia.gov/}}
+  \end{quote}
+\end{frame}
+
+\begin{frame}[fragile]{LAMMPS: Executables for Linux}
+  \begin{itemize}
+    \item Pre-built Ubuntu Linux executable (\texttt{lammps-stable}):
+    \begin{lstlisting}
+  $ sudo add-apt-repository ppa:gladky-anton/lammps
+  $ sudo apt-get update
+  $ sudo apt-get install lammps-stable
+    \end{lstlisting}
+
+    \item Pre-built OpenSuse Linux executable (\texttt{lmp}):
+    \begin{lstlisting}
+  $ zypper install lammps
+    \end{lstlisting}
+
+    \item Archlinux build-script (\texttt{lmp}):
+    \begin{lstlisting}
+  $ git clone https://aur.archlinux.org/lammps.git
+  $ cd lammps
+  $ makepkg -s
+  $ makepkg -i
+    \end{lstlisting}
+
+    \item Also Conda:
+    \begin{lstlisting}
+  $ conda config --add channels conda-forge
+  $ conda create -n lammps-env
+  $ conda activate lammps-env
+  $ conda install lammps
+    \end{lstlisting}
+  \end{itemize}
+  \frefw{Source: \url{https://lammps.sandia.gov/doc/Install.html}}
+\end{frame}
+
+\begin{frame}[fragile]{LAMMPS: \texttt{cmake}}
+  \begin{itemize}
+    \item However, it is suggested to build LAMMPS yourself.
+    \item You can do this executing \texttt{./build-lammps.sh}.
+  \end{itemize}
+    \begin{lstlisting}
+#!/bin/bash
+set -e
+
+LAMMPS_VERSION=3Mar2020
+Make_CPUs=4
+URL=https://github.com/lammps/lammps/archive
+wget ${URL}/stable_${LAMMPS_VERSION}.zip
+unzip stable_${LAMMPS_VERSION}.zip
+rm -f stable_${LAMMPS_VERSION}.zip
+cd lammps-stable_${LAMMPS_VERSION}
+
+mkdir build; cd build
+cmake -DPKG_MANYBODY=yes \
+      -DPKG_KSPACE=yes \
+      -DPKG_MOLECULE=yes \
+      -DPKG_RIGID=yes \
+	     ../cmake
+make VERBOSE=1 -j ${Make_CPUs}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{LAMMPS}
+  \begin{itemize}
+  \setlength\itemsep{1em}
+    \item The tarball for this project can be downloaded here: \href{https://ves-code.github.io/doc-v2.7-irtg-school-2020/user-doc/html/tutorial-resources/irtg-school-mainz-2020-metad.tar.gz}{click}.
+
+    \item Contains the input file for the unbiased simulation.
+
+    \begin{lstlisting}
+  irtg-school-mainz-2020/ $ tree
+  .
+  |-- data.nacl
+  |-- in.nacl
+  |-- nacl.psf
+  |-- run.sh
+  |-- start.lmp
+  |-- state.vmd
+    \end{lstlisting}
+  \end{itemize}
+  \frefw{Source: \url{https://ves-code.github.io/doc-v2.7-irtg-school-2020/user-doc/html/ves_tutorials.html}}
+\end{frame}
+
+\begin{frame}{LAMMPS}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item The files comes from the TRR 146 IRTG School 2020 tutorial, and were prepared by \href{https://www2.mpip-mainz.mpg.de/~valsson/}{Omar Valsson}.
+    \item We consider NaCl in aqueous solution.
+    \item The dissociation barrier is expected to be around 2.5 $\kT$.
+    \item Collective solvent motions play an important role in the transition.
+    \item The system contains 1 Na, 1 Cl, and 106 water molecules (total 320 atoms).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{LAMMPS}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item The system:
+  \end{itemize}
+  \begin{figure}
+    \includegraphics[width=0.6\textwidth]{fig/NaCl.png}
+    \caption{NaCl in water.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{LAMMPS}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item Download VMD (\href{https://www.ks.uiuc.edu/Development/Download/download.cgi?PackageName=VMD}{click})
+
+    \item Load the LAMMPS data file (\texttt{data.nacl}).
+
+    \item Open VMD $\rightarrow$ Extensions $\rightarrow$ TK console.
+    \begin{lstlisting}
+  $ topo readlammpsdata data.nacl
+  $ play state.vmd
+    \end{lstlisting}
+
+    \item We will run the simulation for 1 ns (see \texttt{start.lmp})
+
+    \item You can do this by executing \texttt{run.sh}.
+    \begin{lstlisting}
+  #!/bin/bash
+
+  lmpexec=$HOME/lammps-stable_3Mar2020/build/lmp
+  ncor=2
+
+  mpirun -np ${ncor} ${lmpexec} < start.lmp > out.lmp
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{}
+  \begin{center}
+    \vspace{1.2cm}
+    \includegraphics[width=0.8\textwidth]{fig/plumed-logo.png}
+  \end{center}
+  \frefw{Source: \url{https://www.plumed.org/}}
+\end{frame}
+
+\begin{frame}{PLUMED}
+  PLUMED is an open-source, community-developed library that provides a wide range of different methods, which include:
+  \begin{itemize}
+    \item enhanced-sampling algorithms,
+    \item free-energy methods,
+    \item tools to analyze the vast amounts of data produced by molecular dynamics (MD) simulations.
+  \end{itemize}
+  These techniques can be used in combination with a large toolbox of collective variables that describe complex processes in physics, chemistry, material science, and biology.\fref{Source: \url{https://www.plumed.org/}}
+\end{frame}
+
+\begin{frame}[fragile]{PLUMED: Build for Linux}
+  \begin{itemize}
+    \item Run \texttt{build-plumed.sh} (\texttt{plumed}):
+    \begin{lstlisting}
+  #!/bin/bash
+  set -e
+
+  PLUMED_VERSION=2.6.2
+  Make_CPUs=2
+  URL=https://github.com/plumed/plumed2/archive
+  wget ${URL}/v${PLUMED_VERSION}.zip
+  unzip v${PLUMED_VERSION}.zip
+  cd plumed2-${PLUMED_VERSION}
+  INSTALL_DIR=${PWD}/install
+
+  ./configure --prefix=${INSTALL_DIR}
+  make -j ${Make_CPUs}
+  make install
+    \end{lstlisting}
+
+    \item Or use Conda:
+    \begin{lstlisting}
+  $ conda config --add channels conda-forge
+  $ conda create -n lammps-env
+  $ conda activate lammps-env
+  $ conda install -c conda-forge plumed
+    \end{lstlisting}
+  \end{itemize}
+  \frefw{Source: \url{https://www.plumed.org/doc-v2.7/user-doc/html/_installation.html}}
+\end{frame}
+
+\begin{frame}[fragile]{PLUMED}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item After you have finished the simulation, you should have \texttt{out.dcd} which stores the 1-ns trajectory of our system.
+    \item Now we will use PLUMED to analyze our simulation.
+    \item The distance between Na and Cl can be calculated using the following PLUMED action:
+    \begin{lstlisting}
+  distance: DISTANCE ATOMS=319,320
+    \end{lstlisting}
+    \item And the coordination number which represents the collective motion of the solvent wrt Na can be computed as:
+    \begin{lstlisting}
+  COORDINATION ...
+  GROUPA=319
+  GROUPB=1-318:3
+  SWITCH={RATIONAL R_0=0.315 D_MAX=0.5 NN=12 MM=24}
+  NLIST
+  NL_CUTOFF=0.55
+  NL_STRIDE=10
+  LABEL=coord
+  ... COORDINATION
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PLUMED}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item The coordination number calculates the following rational switching function:
+    \begin{equation}
+      f(x)=\frac{1 - \left( \frac{x}{r_0} \right)^n}{1 - \left( \frac{x}{r_0} \right)^m},
+    \end{equation}
+    where $r_0=0.315$, $n=12$, and $m=24$. You can see the function \href{https://www.desmos.com/calculator/nqujdsvj0z}{here.}
+
+    \item Use this command to calculate the defined variables along the trajectory (stored in \texttt{run-driver.sh}):
+    \begin{lstlisting}
+  plumed driver --plumed plumed-driver.dat \
+                --timestep 0.002 \
+                --trajectory-stride 100 \
+                --mf_dcd out.dcd
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{PLUMED}
+  \begin{itemize}
+    \setlength\itemsep{1em}
+    \item You should obtain \texttt{COLVAR-driver} and see something like:
+    \begin{lstlisting}
+  #! FIELDS time distance coord
+   0.200000 0.568067 5.506808
+   0.400000 0.500148 4.994588
+   0.600000 0.449778 4.931140
+   0.800000 0.528272 5.105816
+   1.000000 0.474371 5.089863
+   1.200000 0.430620 5.091551
+   1.400000 0.470374 4.993886
+   1.600000 0.458768 4.940097
+   1.800000 0.471886 4.952868
+   2.000000 0.489058 4.897593
+  .
+  .
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{LAMMPS}
+  \textbf{Exercises}\\[0.2cm]
+  \begin{enumerate}
+    \setlength\itemsep{1em}
+    \item Load the trajectory: in terminal \texttt{vmd out.dcd -psf nacl.psf}, then in VMD \texttt{pbc wrap -compound res -all}.
+
+    \item Change the visualization of atoms and render the system.
+
+    \item How the distance between Na and Cl changes in time?
+
+    \item Plot distances as a histogram (normalized). What distance value is the most probable?
+
+    \item From the histogram calculate $F=-\frac{1}{\beta}\log N$, where $N$ is the histrogram.
+
+    \item Where the barrier is located?
+
+    \item Perform the same analysis (from step 2) for the coordination number.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{LAMMPS}
+  \textbf{Exercises}\\[0.2cm]
+  \begin{enumerate}
+    \setlength\itemsep{1em}
+    \item Pick your tools -- probably using \texttt{python} would be the easiest, but you can select anything you are used to.
+
+    \item Make an account on GitHub: \url{https://github.com/}.
+
+    \item Create a repository called \texttt{0800-fizobl-lammps}.
+
+    \item Sync your work.
+
+    \item Make the required plots and describe your results in \texttt{README.md}.
+
+    \item This project will be taken with 0.4 weight for your course grade.
+
+    \item Problems? Questions? Ask on our Slack channel: \texttt{\#0800-fizobl-21}.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+  \begin{center}
     \fontsize{25pt}{6}\selectfont\vspace{1.2cm}
     \textcolor{subtitle}{Enhanced Sampling}
   \end{center}
