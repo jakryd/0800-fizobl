@@ -1681,6 +1681,14 @@ make VERBOSE=1 -j ${Make_CPUs}
   \end{center}
 \end{frame}
 
+\begin{frame}{Enhanced Sampling: Source}
+  \begin{itemize}
+  \setlength\itemsep{1em}
+    \item J. Rydzewski, and O. Valsson, \textit{Multiscale Reweighted Stochastic Embedding (MRSE): Deep Learning of Collective Variables for Enhanced Sampling}, \href{https://arxiv.org/abs/2007.06377}{arXiv}, 2021.
+    \item O. Valsson, P. Tiwary, and M. Parrinello, \textit{Enhancing Important Fluctuations: Rare Events and Metadynamics from a Conceptual Viewpoint}, Annual Review of Physical Chemistry, 67:159-184, 2016.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Long Timescales}
 \begin{itemize}
 \setlength\itemsep{1em}
@@ -1690,6 +1698,30 @@ make VERBOSE=1 -j ${Make_CPUs}
 
   \item This sampling problem comes from the fact that a typical free energy landscape is characterized by many metastable states separated by free energy barriers that are much higher than the thermal energy $\kT$.
 \end{itemize}
+\end{frame}
+
+\begin{frame}{$\kT$}
+  \begin{itemize}
+  \setlength\itemsep{1em}
+    \item $\kT$ is used in physics as a scale factor for energy values in molecular-scale systems.
+    \item Inverse of $\kT$ is called the inverse temperature and generally as $\beta=\frac{1}{\kT}$.
+    \item For a system in equilibrium in canonical ensemble, the probability of the system being in state with energy $U$ is proportional to $\e^{-\beta U}$.
+    \item $\kT$ is the amount of heat required to increase the thermodynamic entropy of a system by $k_{\mathrm{B}}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{$\kT$}
+  \begin{figure}
+    \includegraphics[width=0.5\textwidth]{fig/kt.png}
+    \caption{$\kT$ in different units.\fref{Source: \url{https://en.wikipedia.org/wiki/KT_(energy)}}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Metastable States}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/metastate.jpg}
+    \caption{Slow transitions between metastable states.}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Sampling Problem}
@@ -1726,6 +1758,62 @@ make VERBOSE=1 -j ${Make_CPUs}
     \mathbf{s}(\mathbf{R}) = [s_1(\mathbf{R}), s_2(\mathbf{R}), \ldots, s_d(\mathbf{R})].
   \end{equation}
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Collective Variables}
+  \begin{itemize}
+  \setlength\itemsep{1em}
+    \item Also called \textit{order parameters} or \textit{coarse-grained variables} in some publications.
+    \item Should be of lower dimension than microscopic coordinates $\bR$.
+    \item Can be any function of microscopic coordinates $s(\bR)$.
+    \item For instance: angles, distances, contact map, dihedral angles, index along a predefined reaction coordinate, position, and many others.
+    \item Can be periodic.
+    \item Any differentiable function (to calculate forces) that discriminates between metastable states.
+    \item Usually selecting CVs is a very difficult task.
+    \item Nowadays machine learning can be used to find CVs: dimensionality reduction methods based on neural networks.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/cv1.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/cv2.jpg}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{fig/cv3.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{fig/cv4.jpg}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=0.6\textwidth]{fig/cv5.jpg}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{fig/cv6.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{CVs: Examples}
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{fig/cv7.jpg}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Theory of Enhanced Sampling}
