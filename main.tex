@@ -1923,7 +1923,201 @@ make VERBOSE=1 -j ${Make_CPUs}
 \begin{frame}{Umbrella Sampling}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item TODO
+  \item A reaction coordinate is required before using US.
+  \item The reaction coordinate is restrained with a biasing potential.
+  \item The bias (biasing potential) is usually taken to be a harmonic potential of the form:
+  \begin{equation}
+    W(f(\br), s) = \frac{1}{2}\kappa(f(\br)-s)^2,
+    \label{eq:umbr}
+  \end{equation}
+  which we call an umbrella potential and $f(\br)$ is the reaction coordinate.
+  \item Eq.~\ref{eq:umbr} is added to $U(\br)$ so that the total potential is:
+  \begin{equation}
+    U(\br) + W(f(\br),s).
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item The equilibrium value of the harmonic potential is chosen as a set of intermediate points:
+  \begin{equation}
+    \bs^{(1)}, \bs^{(2)}, \dots, \bs^{(n)}
+  \end{equation}
+  between the initial $\bs^{(i)}$ and ending $\bs^{(f)}$ points.
+  \item The reaction coordinate $q\equiv f(\br)$ is driven between the two endpoint values.
+  \item This yields a biased probability distribution $P_V(\bs,\bs^{(k)})$ for $k=1,2,\dots,n$.
+  \item An unbiasing procedure is required to reconstruct the unbiased probability and free energy profile.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item A procedure to unbias the probability distribution obtained from US is called WHAM (weighted histogram analysis method).
+  \item Let's start from the biased probability distribution:
+  \begin{equation}
+    P_V(q,\bs^{(k)}) = \e^{\beta F_k} \int\d\br\; \e^{-\beta V(\br,\bs^{(k)})} \delta[f(\br)-q],
+  \end{equation}
+  where $V(\br,\bs^{(k)})=U(\br)+W(f(\br),\bs^{(k)})$ and $F_k$ is free energy.
+  \item Free energy $F_k$ is:
+  \begin{equation}
+    \e^{-\beta F_k} = \int\d\br\; \e^{-\beta V(\br,\bs^{(k)})} = \e^{-\beta F_0} \left< \e^{-\beta W(f(\br),\bs^{(k)})} \right>,
+  \end{equation}
+  where $\e^{-\beta F_0}$ is the unbiased partition function.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Let's define the $k$-th unbiased probability distribution as:
+  \begin{equation}
+    P_k(q) = \e^{-\beta(F_k - F_0)}\e^{\beta W(q,\bs^{(k)})} P_V(q,\bs^{(k)}).
+  \end{equation}
+  \item The full unbiased probability distribution is a linear combination of $P_k(q)$:
+  \begin{align}
+    P(q) &= \sum_{k=1}^n C_k(q) P_k(q) \\
+         &= \sum_{k=1}^n C_k(q) \left[ \e^{-\beta(F_k - F_0)}\e^{\beta W(q,\bs^{(k)})} P_V(q,\bs^{(k)}) \right].
+  \end{align}
+  \item $C_k(q)$ is a set of coefficients that satisfies $\sum_{k=1}^n C_k(q) = 1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item If we keep $\kappa$ is high, then the probability distribution $P(q)$ can be represented by a Gaussian distribution:
+  \begin{equation}
+    P(q) \approx \frac{1}{\sqrt{2\pi\sigma_k^2}} \e^{-(q-\bar{q}_k)^2/2\sigma^2_k},
+  \end{equation}
+  where $\bar{q}_k$ is the average value of the reaction coordinate in the $k$-th window and $\sigma_k^2$ is the variance.
+  \item As we assume a specific form of the distribution, we can calculate the unbiased approximation to the derivative $\d F_k/\d q$ in the $k$-th window:
+  \begin{equation}
+    \frac{\d F_k}{\d q} = \frac{1}{\beta \sigma_k^2} (q-\bar{q}_k) - \kappa(q-\bs^{(k)}).
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Let $n_w$ represent the number of umbrella windows. The full derivative profile is:
+  \begin{equation}
+    \frac{\d F}{\d q^{(i)}} = \sum_{k=1}^{n_w} C_k(q^{(i)}) {\frac{\d F_k}{\d q}}_{q=q^{(i)}}.
+  \end{equation}
+  \item Next, the full free energy profile $F(q)$ is obtained by a numerical integration.
+  \item Difficult? There exists many libraries implementing the WHAM procedure, so we do not have to implement it ourselfs.\fref{\url{https://manual.gromacs.org/documentation/5.1/onlinehelp/gmx-wham.html}}
+  \item \url{http://www.mdtutorials.com/gmx/umbrella/index.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Umbrella Sampling}
+\begin{figure}
+  \includegraphics[width=0.5\textwidth]{fig/us.png}
+\end{figure}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item See K\"astner, Johannes. \textit{Umbrella sampling}, Wiley Interdisciplinary Reviews: Computational Molecular Science 1.6 (2011): 932-942.
+  \item \url{https://doi.org/10.1002/wcms.66}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Introduced by Laio and Parrinello in 2002.\fref{See: \url{https://doi.org/10.1073/pnas.202427399}}
+  \item A dynamical scheme in which energy basins are filled in using a time-dependent potential that depends on the history of the system's trajectory.
+  \item Once a basin is filled in, the system is driven into the next basin.
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=0.7\textwidth]{fig/meta.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Let's see how the unbiased probability distribution looks:
+  \begin{equation}
+    P(\bs) = \left< \prod_{\alpha=1}^n \delta\left[ f_\alpha(\br) - \bs_\alpha \right] \right>.
+  \end{equation}
+  \item We can replace the phase space average with a time average over a trajectory:
+  \begin{equation}
+    P(\bs) = \lim_{\tau\rightarrow\infty} \frac{1}{\tau} \int_0^\tau \d t\; \prod_{\alpha=1}^n \delta\left[ f_\alpha(\br(t)) - \bs_\alpha \right],
+  \end{equation}
+  under the assumption that the dynamics is ergodic.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item In metadynamics, we express the Dirac function as the limit of a Gaussian function:
+  \begin{equation}
+    \delta[x-a] = \lim_{\sigma\rightarrow 0} \frac{1}{\sqrt{2\pi\sigma^2}} \e^{-(x-a)^2/2\sigma^2}.
+  \end{equation}
+  \item Then the probability can be written as:
+  \begin{align}
+    P(\bs) &= \lim_{\tau\rightarrow\infty}\lim_{s\rightarrow 0} \frac{1}{\sqrt{2\pi\Delta s^2}\tau} \nonumber\\
+           &\cdot \int_0^\tau \d t\; \prod_{\alpha=1}^n \exp\left[ -\frac{(\bs_\alpha - f_\alpha(\br(t)))^2}{2\Delta s^2} \right].
+  \label{eq:metap}
+  \end{align}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Numerically, Eq.~\ref{eq:metap} is written as a discrete sum:
+  \begin{align}
+    P(\bs) &\approx \frac{1}{\sqrt{2\pi\Delta s^2}\tau} \nonumber\\
+           &\cdot \sum_{k=0}^{N-1} \exp\left[ -\sum_{\alpha=1}^n \frac{(\bs_\alpha - f_\alpha(\br(t)))^2}{2\Delta s^2} \right].
+    \label{eq:metasum}
+  \end{align}
+  \item Eq.~\ref{eq:metasum} suggests a form of the bias potential.
+  \item Consider a bias potential of the form:
+  \begin{equation}
+    V(\br,t) = w \sum_{t=k\tau} \exp\left[ -\sum_{\alpha=1}^n \frac{(f_\alpha(\br) - f_\alpha(\br_\tau(t)))^2}{2\Delta s^2} \right],
+    \label{eq:metav}
+  \end{equation}
+  where $k=1,2,\dots$ and $\tau$ is the time stride of depositing the bias.
+  \item $\br_\tau(t)$ is the biased time evolution of the complete microscopic coordinates up to time $t$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item In the simplest variant of metadynamics, the negative of Eq.~\ref{eq:metav} is taken as an approximation to the free energy:
+  \begin{equation}
+    F(\mathbf{q}) = -\lim_{t\rightarrow\infty} V(\mathbf{q}(\br), t).
+  \end{equation}
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=0.5\textwidth]{fig/metabias.jpg}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item
 \end{itemize}
 \end{frame}
 
