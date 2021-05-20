@@ -1,6 +1,8 @@
 \documentclass[10pt]{beamer}
 
 \usepackage{lecture-style}
+\usepackage{caption}
+\usepackage{subcaption}
 
 % title info
 \title{Introduction to Computational Physics}
@@ -2103,22 +2105,288 @@ make VERBOSE=1 -j ${Make_CPUs}
 \begin{frame}{Metadynamics}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item
+  \item Mapping a high-dimensional PES to a low-dimensional FES.
+\end{itemize}
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig/pes}
+  \caption{PES (C. Dellago)}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig/fes}
+  \caption{FES (O. Valsson)}
+\end{subfigure}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item We can build a bias potential using the following expression:
+  \begin{equation}
+    V(\bs)=-\left( 1-\frac{1}{\gamma} \right) F(\bs),
+  \label{eq:wtmetad}
+  \end{equation}
+  where $\gamma\geq 1$ is a parameter called bias factor.
+
+  \item Then we can insert Eq.~\ref{eq:wtmetad} to the formula for the biased probability distribution:
+  \begin{align}
+    P_V(\bs) & \propto \exp\left[ -\beta(F(\bs)+V(\bs)) \right] \nonumber\\
+             & = \exp\left[ -\beta(F(\bs)-(1-1/\gamma)F(\bs)) \right] \nonumber\\
+             & = \exp\left[ -\frac{\beta}{\gamma} F(\bs) \right] = [P(\bs)]^{1/\gamma},
+  \label{eq:pv}
+  \end{align}
+  which is the so-called well-tempered distribution.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Metadynamics}
+\begin{frame}{Well-Tempered Metadynamics}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item
+  \item Fluctuations enhanced.
+  \item Easier to cross barriers.
+  \item Flatten the sampling comparing to the unbiased distribution $P(\bs)$.
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=\textwidth]{fig/enh}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Using Eq.~\ref{eq:pv} and:
+  \begin{equation}
+    F_V(\bs) = -\frac{1}{\beta}\log P_V(\bs),
+  \end{equation}
+  we can obtain an expression for the free energy under the bias potential:
+  \begin{equation}
+    F_V(\bs) = \frac{1}{\gamma} F(\bs),
+  \end{equation}
+  where we ignore unimportant additive constants.
+
+  \item We sample on an effective FES where the barriers are reduced by a factor of $\gamma$.
+
+  \item Optimal $\gamma$ is such that effective barriers are around $\kT$.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Metadynamics}
+\begin{frame}{Well-Tempered Metadynamics}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item
+  \item Taking the limit $\gamma\to\infty$ gives:
+  \begin{equation}
+    V(\bs) = -F(\bs)
+  \end{equation}
+  and
+  \begin{equation}
+    P_V(\bs) \propto 1,
+  \end{equation}
+  which gives uniform sampling of CVs.
+
+  \item Completely reduces of free energy barriers.
+
+  \item Not optimal: Spend a lot of time sampling irrelevant regions in free energy.
+
+  \item Better to enhance CVs with a finite value of $\gamma$.
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item To achieve such sampling, we can iteratively build a bias by periodically updating it:
+  \begin{align}
+    V_n(\bs) &= V_{n-1}(\bs) \nonumber\\
+             &+ G(\bs,\bs_n)\exp\left[ -\frac{1}{\gamma-1}\beta V_{n-1}(\bs_n) \right],
+  \end{align}
+  where:
+  \begin{equation}
+    G(\bs,\bs_n) = W_0 \exp\left[ -\sum_i^d \frac{(s_i-s_{n,i})^2}{2\sigma^2_i} \right]
+  \end{equation}
+  is a Gaussian biasing kernel of height $W_0$ that is centered at the current CV location $\bs_n$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item The above update is performed every $N_G$ steps.
+
+  \item Between steps $n$ and $n+1$, the bias is:
+  \begin{equation}
+    V_n(\bs) = \sum_{k=1}^n W_k \exp\left[ -\sum_i \frac{(s_i-s_{k,i})^2}{2\sigma^2_i} \right],
+  \end{equation}
+  where $W_k$ is the Gaussian height for the Gaussian deposited at step $k$:
+  \begin{equation}
+    W_k=W_0\exp\left[ -\frac{1}{\gamma-1} \beta V_{k-1}(\bs_k) \right],
+  \end{equation}
+  where the scaling factor decreases to zero as $1/n$:
+  \begin{equation}
+    \exp\left[ -\frac{1}{\gamma-1} \beta V_{n-1}(\bs_n) \right] \to \frac{1}{n}.
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item The bias reaches a quasi-stationary state, which is important for reweighting.
+
+  \item It can be proven that in the long-time limit the bias potential is:
+  \begin{equation}
+    V(\bs,t)=-\left( 1-\frac{1}{\gamma} \right) F(\bs) + c(t),
+  \end{equation}
+  where $c(t)$ is a time-dependent constant that can be estimated during a simulation.
+
+  \item To perform reweighting, we need to account for time-dependence of the bias:
+  \begin{equation}
+    P(\bR,t) = P_V(\bR)\e^{\beta [V(\bs(\bR),t)-c(t)]}.
+  \end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Any thermodynamic quantity $O$ can be calculated as:
+  \begin{equation}
+    \left< O(\bR) \right> = \left< O(\bR) \e^{\beta [V(\bs(\bR))-c(t)]} \right>_V,
+  \end{equation}
+  where the time-dependent constant $c(t)$ is calculated as:
+  \begin{equation}
+    c(t) = \frac{1}{\beta}\log\frac{\int\d\bs\;\exp\left[ \frac{\gamma}{\gamma-1}\beta V(\bs,t) \right]}{\int\d\bs\;\exp\left[ \frac{1}{\gamma-1}\beta V(\bs,t) \right]},
+  \end{equation}
+  which is valid when the bias has reached a quasi-stationary state.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item It can be shown that a time-independent estimator for $F(\bs)$ is given by:
+  \begin{align}
+    F(\bs) &= -\left( \frac{\gamma}{\gamma-1} \right)V(\bs, t) \nonumber\\
+           &+ \frac{1}{\beta}\log\int\d\bs\; \exp\left[ \frac{\gamma}{\gamma-1} \beta V(\bs,t) \right]
+  \end{align}
+
+  \item The nontempered limit $\gamma\to\infty$ corresponds to:
+  \begin{equation}
+    V(\bs) = -F(\bs),
+  \end{equation}
+  which means that the bias fully compensates the underlying free energy landscape.
+
+  \item This was the idea that guided the first version of metadynamics in which the strengh of the biasing kernel was kept constant at each iteration.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Alanine dipeptide in vacuum with backbone dihedral angles $\Phi$ and $\Psi$ as CVs.
+
+  \item Two metastable basins (or three), $C7_{\mathrm{eq}}$ and $C7_{\mathrm{ax}}$.
+
+  \item Barrier aroung 34 kJ/mol (16 $\kT$).
+
+  \item Mean transition time around 28 $\mu$s.
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=\textwidth]{fig/wtala}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item 300 times shorter trajectory.
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=\textwidth]{fig/wtala1}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Well-Tempered Metadynamics}
+\begin{figure}
+  \includegraphics[width=0.7\textwidth]{fig/metaus}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Updated files for the enhanced sampling simulation are provided in \href{?}{here}.
+  \item We want to construct a bias potential $V(\bs)$ on the Na-Cl distance using WT-MetaD.
+  \item We will run the simulation for 10 ns.
+  \item The bias is given by:
+  \begin{equation}
+    V(\bs)=-\left(1-\frac{1}{\gamma}\right)F(\bs),
+  \end{equation}
+  so the system evolve under an effective free energy $F(\bs)/\gamma$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Biasing the distance using PLUMED:
+\end{itemize}
+\begin{lstlisting}
+d1: DISTANCE ATOMS=319,320
+metad: METAD ...
+   ARG=d1
+   SIGMA=0.02
+   HEIGHT=1
+   BIASFACTOR=5
+   TEMP=300.0
+   PACE=500
+   GRID_MIN=0.2
+   GRID_MAX=1.0
+   GRID_BIN=300
+   CALC_RCT
+...
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item We also limit the exploration of the CV space by using an upper wall bias $V_w(\bs)$:
+  \begin{equation}
+    V_w(s)=\kappa(s-s_0)^2
+  \end{equation}
+  if $s>s_0$ and 0 otherwise.
+\end{itemize}
+\begin{lstlisting}
+d1: DISTANCE ATOMS=319,320
+uwall: UPPER_WALLS ...
+   ARG=d1
+   AT=0.6
+   KAPPA=2000.0
+   EXP=2
+   EPS=1
+   OFFSET=0.
+...
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Run the simulation using: \texttt{./run.sh} (as before).
+  \item Estimate the free energy profile using \texttt{HILLS} file that resulted from the simulation:
+  \begin{lstlisting}
+plumed sum_hills --hills HILLS --min 0.1 --max 0.8 \
+                 --bin 300 --stride 100
+  \end{lstlisting}
+  \item You should observe something like:
+\end{itemize}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{fig/wtnacl}
+  \end{figure}
 \end{frame}
 
 \end{document}
