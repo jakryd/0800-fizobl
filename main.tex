@@ -2318,7 +2318,7 @@ make VERBOSE=1 -j ${Make_CPUs}
 \begin{frame}{Biasing Na-Cl}
 \begin{itemize}
 \setlength\itemsep{1em}
-  \item Updated files for the enhanced sampling simulation are provided in \href{?}{here}.
+  \item Updated files for the enhanced sampling simulation are provided \href{https://github.com/jakryd/0800-fizobl/tree/main/project-2}{here}.
   \item We want to construct a bias potential $V(\bs)$ on the Na-Cl distance using WT-MetaD.
   \item We will run the simulation for 10 ns.
   \item The bias is given by:
@@ -2387,6 +2387,19 @@ plumed sum_hills --hills HILLS --min 0.1 --max 0.8 \
   \begin{figure}
     \includegraphics[width=0.7\textwidth]{fig/wtnacl}
   \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item We should observe two states: associated and dissociated.
+
+  \item Is the simulation converged?
+
+  \item What energy should the system have while in the dissociated state?
+
+  \item Why the free energy starts to rise for distance $>0.6$ nm?
+\end{itemize}
 \end{frame}
 
 \end{document}
