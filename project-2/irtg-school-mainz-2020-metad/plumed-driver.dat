@@ -1,0 +1,20 @@
+# Read COLVAR file
+distance: READ FILE=COLVAR IGNORE_TIME VALUES=d1 
+metad: READ FILE=COLVAR IGNORE_TIME VALUES=metad.rbias 
+uwall: READ FILE=COLVAR IGNORE_TIME VALUES=uwall.bias
+
+# Define weights
+weights: REWEIGHT_BIAS TEMP=300 ARG=metad.rbias,uwall.bias 
+
+# Calculate histogram
+hh: HISTOGRAM ...
+   ARG=distance 
+   GRID_MIN=0.2 
+   GRID_MAX=0.8 
+   GRID_BIN=100 
+   BANDWIDTH=0.002 
+   LOGWEIGHTS=weights
+...
+
+# Print histograms to file
+DUMPGRID GRID=hh FILE=histo.dat FMT=%24.16e 

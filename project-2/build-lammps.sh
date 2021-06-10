@@ -50,7 +50,7 @@ cmake -DBUILD_MPI=${BuildMPI} \
       -DPKG_RIGID=yes \
       -DPKG_USER-PLUMED=yes \
       -DDOWNLOAD_PLUMED=no \
-      -DPLUMED_MODE=runtime
+      -DPLUMED_MODE=runtime \
       ../cmake
 make VERBOSE=1 -j ${Make_CPUs}
 

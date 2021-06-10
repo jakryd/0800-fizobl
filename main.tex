@@ -2402,4 +2402,42 @@ plumed sum_hills --hills HILLS --min 0.1 --max 0.8 \
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Reweighting Na-Cl simulation}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item The weights to reweight the simulation are of the following form:
+  \begin{equation}
+    w \propto \e^{\beta [V(\bs,t)-c(t)+V_w(\bs)]},
+  \end{equation}
+  where $V_w(\bs)$ is the wall bias appended to the simulation.
+\end{itemize}
+
+\begin{lstlisting}
+# Read COLVAR file
+distance: READ FILE=COLVAR IGNORE_TIME VALUES=d1
+metad: READ FILE=COLVAR IGNORE_TIME VALUES=metad.rbias
+uwall: READ FILE=COLVAR IGNORE_TIME VALUES=uwall.bias
+
+# Define weights
+weights: REWEIGHT_BIAS TEMP=300 ARG=metad.rbias,uwall.bias
+\end{lstlisting}
+
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item A script to reweight the simulation is \texttt{plumed-driver.dat}.
+  \item Execute it using: \texttt{plumed -driver --plumed plumed-driver.dat --noatoms}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Biasing Na-Cl}
+\begin{itemize}
+\setlength\itemsep{1em}
+  \item Plot the free energy from \texttt{histo.dat}.
+
+  \item Compare it to the free energy generated without reweighting.
+
+  \item Does the reweighting fix the free energy?
+\end{itemize}
+\end{frame}
+
 \end{document}
